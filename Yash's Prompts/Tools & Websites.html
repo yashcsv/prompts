@@ -1,0 +1,238 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary)}
+.wrap{padding:0 0 3rem}
+.filters{display:flex;flex-wrap:wrap;gap:6px;margin:1rem 0 1.25rem}
+.filters button{font-size:12px;padding:5px 12px;border-radius:100px;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer;transition:all .15s}
+.filters button.on{background:var(--color-text-primary);color:var(--color-background-primary);border-color:var(--color-text-primary)}
+.search-bar{width:100%;padding:8px 12px;border:0.5px solid var(--color-border-secondary);border-radius:var(--border-radius-md);background:var(--color-background-primary);color:var(--color-text-primary);font-size:13px;margin-bottom:1rem;outline:none}
+.search-bar:focus{border-color:var(--color-border-primary)}
+.count{font-size:12px;color:var(--color-text-secondary);margin-bottom:0.75rem}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px}
+.card{background:var(--color-background-primary);border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:12px 14px;display:flex;flex-direction:column;gap:6px}
+.card-top{display:flex;align-items:flex-start;justify-content:space-between;gap:8px}
+.card-name{font-size:13px;font-weight:500}
+.badges{display:flex;flex-wrap:wrap;gap:4px}
+.badge{font-size:10px;padding:2px 7px;border-radius:100px;font-weight:500;white-space:nowrap}
+.free{background:#E1F5EE;color:#0F6E56}
+.paid{background:#FCEBEB;color:#A32D2D}
+.freemium{background:#FAEEDA;color:#854F0B}
+.opensource{background:#E6F1FB;color:#185FA5}
+.website{background:#EEEDFE;color:#3C3489}
+.cat{font-size:10px;padding:2px 7px;border-radius:100px;background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.price{font-size:12px;font-weight:500;color:var(--color-text-primary)}
+.desc{font-size:12px;color:var(--color-text-secondary);line-height:1.5}
+.link{font-size:11px;color:#185FA5;text-decoration:none;margin-top:2px;display:inline-block}
+.section-label{font-size:11px;font-weight:500;letter-spacing:.04em;color:var(--color-text-secondary);text-transform:uppercase;margin:1.5rem 0 0.5rem;padding-bottom:4px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.hidden{display:none}
+</style>
+
+<div class="wrap">
+<h2 style="font-size:18px;font-weight:500;margin-bottom:4px">Complete Tool Directory</h2>
+<p style="font-size:13px;color:var(--color-text-secondary);margin-bottom:1rem">Every tool from the stack — filterable by price type and category.</p>
+
+<input class="search-bar" type="text" id="search" placeholder="Search tools..." oninput="filter()">
+
+<div class="filters">
+  <button class="on" onclick="toggleCat('all',this)">All</button>
+  <button onclick="toggleCat('free',this)">Free</button>
+  <button onclick="toggleCat('freemium',this)">Freemium</button>
+  <button onclick="toggleCat('paid',this)">Paid</button>
+  <button onclick="toggleCat('opensource',this)">Open Source</button>
+  <button onclick="toggleCat('ai-coding',this)">AI Coding</button>
+  <button onclick="toggleCat('frontend',this)">Frontend</button>
+  <button onclick="toggleCat('backend',this)">Backend</button>
+  <button onclick="toggleCat('devops',this)">DevOps</button>
+  <button onclick="toggleCat('security',this)">Security</button>
+  <button onclick="toggleCat('ai-ml',this)">AI/ML</button>
+  <button onclick="toggleCat('automation',this)">Automation</button>
+  <button onclick="toggleCat('monitoring',this)">Monitoring</button>
+  <button onclick="toggleCat('growth',this)">Growth</button>
+  <button onclick="toggleCat('web3',this)">Web3</button>
+</div>
+
+<div class="count" id="count"></div>
+<div class="grid" id="grid"></div>
+</div>
+
+<script>
+const tools = [
+  // AI CODING
+  {name:"Claude Code",price:"Usage-based (~$10–50/mo)",type:"paid",cat:"ai-coding",desc:"Best reasoning, 200K context, full codebase understanding. Terminal-first AI coding agent.",url:"https://claude.ai/code"},
+  {name:"Cursor",price:"$20/mo Pro",type:"paid",cat:"ai-coding",desc:"Best daily driver IDE with Tab autocomplete, Composer for multi-file changes. VS Code base.",url:"https://cursor.com"},
+  {name:"Windsurf",price:"$15/mo Pro",type:"freemium",cat:"ai-coding",desc:"Agentic Cascade mode for hands-off multi-step feature scaffolding. Good Copilot alternative.",url:"https://codeium.com/windsurf"},
+  {name:"v0.dev",price:"Free tier / $20 Pro",type:"freemium",cat:"ai-coding",desc:"Vercel's React + Tailwind UI generator from prompts or screenshots. Best frontend AI tool.",url:"https://v0.dev"},
+  {name:"Replit Agent",price:"Free tier / $25/mo",type:"freemium",cat:"ai-coding",desc:"Browser-based AI dev environment. Zero setup. Great for live client demos.",url:"https://replit.com"},
+  {name:"Bolt.new",price:"Free tier / $20/mo",type:"freemium",cat:"ai-coding",desc:"Full-stack app from prompt in browser. StackBlitz-powered. Great for rapid prototypes.",url:"https://bolt.new"},
+  {name:"Aider",price:"Free / OSS",type:"opensource",cat:"ai-coding",desc:"Terminal-based AI coding assistant. Works with any LLM. Great for local/private codebases.",url:"https://aider.chat"},
+  {name:"Continue.dev",price:"Free / OSS",type:"opensource",cat:"ai-coding",desc:"Open-source Cursor alternative. Self-host with local models. Privacy-first.",url:"https://continue.dev"},
+
+  // FRONTEND
+  {name:"shadcn/ui",price:"Free / OSS",type:"opensource",cat:"frontend",desc:"Best React component library. Copy-paste components, fully yours. Works with Tailwind.",url:"https://ui.shadcn.com"},
+  {name:"Tailwind CSS",price:"Free / OSS",type:"opensource",cat:"frontend",desc:"Utility-first CSS. Industry standard for SaaS UIs. Works with everything.",url:"https://tailwindcss.com"},
+  {name:"Framer",price:"Free tier / $15–35/mo",type:"freemium",cat:"frontend",desc:"Best no-code landing page + marketing site builder. Client-editable CMS included.",url:"https://framer.com"},
+  {name:"Figma",price:"Free tier / $15/mo",type:"freemium",cat:"frontend",desc:"Design tool for client sign-off workflows. AI features for auto-layout and asset gen.",url:"https://figma.com"},
+  {name:"Spline",price:"Free tier / $9/mo",type:"freemium",cat:"frontend",desc:"3D design tool for web. Create interactive 3D hero sections. No Three.js required.",url:"https://spline.design"},
+  {name:"Framer Motion",price:"Free / OSS",type:"opensource",cat:"frontend",desc:"Best React animation library. Micro-interactions, page transitions, gesture support.",url:"https://motion.dev"},
+  {name:"Midjourney",price:"$10–60/mo",type:"paid",cat:"frontend",desc:"AI image generation for branding, hero images, illustrations. Best artistic output.",url:"https://midjourney.com"},
+  {name:"Flux (fal.ai)",price:"Pay-per-use",type:"paid",cat:"frontend",desc:"Best photorealistic AI image generation via API. Use for client brand assets.",url:"https://fal.ai"},
+  {name:"Aceternity UI",price:"Free / OSS",type:"opensource",cat:"frontend",desc:"Animated, premium-feel React components. Great for impressive SaaS landing pages.",url:"https://ui.aceternity.com"},
+  {name:"Radix UI",price:"Free / OSS",type:"opensource",cat:"frontend",desc:"Unstyled accessible primitives. Foundation of shadcn/ui. Solid accessibility defaults.",url:"https://radix-ui.com"},
+
+  // BACKEND
+  {name:"Supabase",price:"Free tier / $25/mo Pro",type:"freemium",cat:"backend",desc:"Postgres + Auth + Storage + Realtime + Edge Functions. Best all-in-one backend for SaaS.",url:"https://supabase.com"},
+  {name:"Neon",price:"Free tier / $19/mo",type:"freemium",cat:"backend",desc:"Serverless Postgres with branching per PR. Scale-to-zero cost model.",url:"https://neon.tech"},
+  {name:"PlanetScale",price:"Free tier / $39/mo",type:"freemium",cat:"backend",desc:"MySQL-compatible serverless DB. Non-blocking schema changes. Good for high-write apps.",url:"https://planetscale.com"},
+  {name:"Prisma ORM",price:"Free / OSS",type:"opensource",cat:"backend",desc:"Type-safe DB queries for TypeScript. Auto-generates types from schema. Works great with Claude.",url:"https://prisma.io"},
+  {name:"Drizzle ORM",price:"Free / OSS",type:"opensource",cat:"backend",desc:"Lightweight TypeScript ORM. Faster than Prisma, SQL-first. Growing community.",url:"https://orm.drizzle.team"},
+  {name:"Hono.js",price:"Free / OSS",type:"opensource",cat:"backend",desc:"Ultra-fast edge-compatible API framework. Runs on Vercel Edge, Cloudflare Workers, Bun.",url:"https://hono.dev"},
+  {name:"tRPC",price:"Free / OSS",type:"opensource",cat:"backend",desc:"End-to-end type-safe APIs in Next.js. No REST boilerplate. Works perfectly with Prisma.",url:"https://trpc.io"},
+  {name:"Upstash Redis",price:"Free tier / pay-per-use",type:"freemium",cat:"backend",desc:"Serverless Redis. Rate limiting, caching, queues. Pay only what you use.",url:"https://upstash.com"},
+  {name:"Appwrite",price:"Free / OSS self-host",type:"opensource",cat:"backend",desc:"Open-source Firebase alternative. Self-host for full control. Good for privacy clients.",url:"https://appwrite.io"},
+
+  // DEVOPS / DEPLOYMENT
+  {name:"Vercel",price:"Free tier / $20/mo Pro",type:"freemium",cat:"devops",desc:"Best Next.js deployment. Preview URLs per PR, instant rollbacks, edge functions.",url:"https://vercel.com"},
+  {name:"Railway",price:"$5 credit free / usage",type:"freemium",cat:"devops",desc:"Docker containers, background workers, cron jobs, databases. Best Heroku replacement.",url:"https://railway.app"},
+  {name:"Cloudflare",price:"Free tier / $20/mo Pro",type:"freemium",cat:"devops",desc:"DNS, CDN, DDoS protection, Workers, R2 storage. Most generous free tier in infra.",url:"https://cloudflare.com"},
+  {name:"Fly.io",price:"Free tier / usage-based",type:"freemium",cat:"devops",desc:"Global persistent containers. Best for non-JS runtimes, stateful apps, local AI inference.",url:"https://fly.io"},
+  {name:"GitHub Actions",price:"Free for public / 2K min/mo private",type:"freemium",cat:"devops",desc:"CI/CD automation. Runs tests, lint, deploys on every PR. Native GitHub integration.",url:"https://github.com/features/actions"},
+  {name:"Render",price:"Free tier / $7/mo",type:"freemium",cat:"devops",desc:"Simple deployment for containers, static sites, cron jobs. Railway is better but Render works.",url:"https://render.com"},
+  {name:"Coolify",price:"Free / OSS self-host",type:"opensource",cat:"devops",desc:"Self-hosted Heroku + Vercel alternative. Host anything on your own VPS. Zero per-project cost.",url:"https://coolify.io"},
+  {name:"Dokku",price:"Free / OSS",type:"opensource",cat:"devops",desc:"Minimal self-hosted PaaS. Git push to deploy. Runs on $6/mo Hetzner VPS.",url:"https://dokku.com"},
+
+  // SECURITY
+  {name:"Clerk",price:"Free tier / $25/mo Pro",type:"freemium",cat:"security",desc:"Best production auth. MFA, SSO, org management, magic links. Next.js integration is flawless.",url:"https://clerk.com"},
+  {name:"Auth.js (NextAuth)",price:"Free / OSS",type:"opensource",cat:"security",desc:"Open-source auth for Next.js. Free, flexible, self-managed. Good if you avoid Clerk costs.",url:"https://authjs.dev"},
+  {name:"Arcjet",price:"Free tier / usage-based",type:"freemium",cat:"security",desc:"App security middleware: bot detection, rate limiting, email validation. 5-min integration.",url:"https://arcjet.com"},
+  {name:"Snyk",price:"Free tier / $25/mo",type:"freemium",cat:"security",desc:"Dependency vulnerability scanning. Runs in CI to block PRs with critical CVEs.",url:"https://snyk.io"},
+  {name:"Socket.dev",price:"Free tier / $19/mo",type:"freemium",cat:"security",desc:"Supply-chain attack detection for npm packages. Catches malicious packages before install.",url:"https://socket.dev"},
+  {name:"Infisical",price:"Free / OSS self-host",type:"opensource",cat:"security",desc:"Secrets management. Sync .env to all environments. Audit trail. Never commit keys again.",url:"https://infisical.com"},
+  {name:"Doppler",price:"Free tier / $10/mo",type:"freemium",cat:"security",desc:"Secrets manager with great DX. Cloud-managed. Syncs to Vercel, Railway, GitHub.",url:"https://doppler.com"},
+
+  // AI / ML
+  {name:"Vercel AI SDK",price:"Free / OSS",type:"opensource",cat:"ai-ml",desc:"Stream AI responses in Next.js. Unified API for OpenAI, Anthropic, Mistral. Best DX for AI SaaS.",url:"https://sdk.vercel.ai"},
+  {name:"LangChain",price:"Free / OSS",type:"opensource",cat:"ai-ml",desc:"LLM orchestration framework. Use LangGraph for stateful agents. Overkill for simple chatbots.",url:"https://langchain.com"},
+  {name:"Pinecone",price:"Free tier / $70/mo",type:"freemium",cat:"ai-ml",desc:"Managed vector DB for RAG. Fast at scale. Use pgvector first — only upgrade at 1M+ vectors.",url:"https://pinecone.io"},
+  {name:"Ollama",price:"Free / OSS",type:"opensource",cat:"ai-ml",desc:"Run local LLMs (Llama, Mistral, Gemma) on your machine. Zero API costs. Privacy-compliant.",url:"https://ollama.com"},
+  {name:"Replicate",price:"Pay-per-use",type:"paid",cat:"ai-ml",desc:"Run any open-source model via API. Image gen, video, audio, transcription. No GPU setup.",url:"https://replicate.com"},
+  {name:"Modal",price:"Pay-per-use / free tier",type:"freemium",cat:"ai-ml",desc:"Serverless GPU functions. Run custom model weights. Best for fine-tuned model inference.",url:"https://modal.com"},
+  {name:"Deepgram",price:"Free $200 credit / usage",type:"freemium",cat:"ai-ml",desc:"Real-time speech-to-text API. Sub-300ms latency. Best for live transcription features.",url:"https://deepgram.com"},
+  {name:"AssemblyAI",price:"Free tier / usage-based",type:"freemium",cat:"ai-ml",desc:"Batch audio transcription with diarization, summaries, sentiment. Great for meeting recaps.",url:"https://assemblyai.com"},
+  {name:"OpenRouter",price:"Pay-per-use",type:"paid",cat:"ai-ml",desc:"Unified API for 100+ LLMs. Cheapest routing, fallback support. Use for cost optimization.",url:"https://openrouter.ai"},
+  {name:"Hugging Face",price:"Free / OSS",type:"opensource",cat:"ai-ml",desc:"Model hub, datasets, Spaces for demos. Essential resource for any AI product builder.",url:"https://huggingface.co"},
+
+  // AUTOMATION
+  {name:"n8n",price:"Free self-host / $20/mo cloud",type:"opensource",cat:"automation",desc:"Best self-hosted automation. 600+ integrations, full JS/Python code nodes. Beats Zapier.",url:"https://n8n.io"},
+  {name:"Make (Integromat)",price:"Free tier / $9/mo",type:"freemium",cat:"automation",desc:"Visual automation for non-technical client handoffs. Good UI, reasonable pricing.",url:"https://make.com"},
+  {name:"Zapier",price:"Free tier / $50–800/mo",type:"paid",cat:"automation",desc:"6,000+ integrations but expensive at scale. Use only if client is already paying for it.",url:"https://zapier.com"},
+  {name:"Resend",price:"Free tier / $20/mo",type:"freemium",cat:"automation",desc:"Modern transactional email API. Best DX. Use with React Email for beautiful templates.",url:"https://resend.com"},
+  {name:"React Email",price:"Free / OSS",type:"opensource",cat:"automation",desc:"Build email templates in React. Preview in browser. Works with Resend, Nodemailer.",url:"https://react.email"},
+  {name:"Cal.com",price:"Free / OSS self-host",type:"opensource",cat:"automation",desc:"Open-source Calendly. White-label, API-first. Embed scheduling in any client app.",url:"https://cal.com"},
+  {name:"Trigger.dev",price:"Free / OSS self-host",type:"opensource",cat:"automation",desc:"Background jobs and scheduled tasks for Next.js. Long-running tasks without timeouts.",url:"https://trigger.dev"},
+
+  // MONITORING
+  {name:"Sentry",price:"Free tier / $26/mo",type:"freemium",cat:"monitoring",desc:"Error tracking with full stack traces, session replay, and AI fix suggestions. Non-negotiable.",url:"https://sentry.io"},
+  {name:"BetterStack",price:"Free tier / $29/mo",type:"freemium",cat:"monitoring",desc:"Uptime monitoring + structured logging + on-call alerts + status pages. Replaces 3 tools.",url:"https://betterstack.com"},
+  {name:"LogRocket",price:"Free tier / $99/mo",type:"freemium",cat:"monitoring",desc:"Session replay + console logs + network requests. Best for debugging hard-to-reproduce bugs.",url:"https://logrocket.com"},
+  {name:"Checkly",price:"Free tier / $20/mo",type:"freemium",cat:"monitoring",desc:"Synthetic E2E monitoring. Playwright tests run in production every 5 minutes.",url:"https://checklyhq.com"},
+  {name:"PostHog",price:"Free / OSS self-host",type:"opensource",cat:"monitoring",desc:"Product analytics + session recording + feature flags + A/B tests. All-in-one open source.",url:"https://posthog.com"},
+  {name:"OpenStatus",price:"Free / OSS",type:"opensource",cat:"monitoring",desc:"Open-source uptime monitoring + status pages. Self-host or cloud. BetterStack alternative.",url:"https://openstatus.dev"},
+
+  // GROWTH / SALES
+  {name:"Notion",price:"Free tier / $16/mo",type:"freemium",cat:"growth",desc:"Business OS for freelancers. Project management, client portals, docs, wikis.",url:"https://notion.so"},
+  {name:"Loom",price:"Free tier / $15/mo",type:"freemium",cat:"growth",desc:"Async video. Replace 80% of client calls. Record feature walkthroughs and bug explanations.",url:"https://loom.com"},
+  {name:"Stripe",price:"2.9% + 30¢ per transaction",type:"paid",cat:"growth",desc:"The only payments choice for SaaS. Subscriptions, usage billing, invoicing, tax handling.",url:"https://stripe.com"},
+  {name:"Clay",price:"Free trial / $149/mo+",type:"paid",cat:"growth",desc:"AI-powered lead enrichment and personalized outreach. 10x reply rates vs generic cold email.",url:"https://clay.com"},
+  {name:"Super.so",price:"$19/mo",type:"paid",cat:"growth",desc:"Turn Notion pages into websites. Client portals, proposal pages, wikis — in minutes.",url:"https://super.so"},
+  {name:"Plausible",price:"$9/mo",type:"paid",cat:"growth",desc:"Privacy-first web analytics. No cookie banners. GDPR compliant. Lightweight script.",url:"https://plausible.io"},
+  {name:"Linear",price:"Free tier / $8/mo",type:"freemium",cat:"growth",desc:"Best project / issue tracker for dev teams and solo devs. Fast, keyboard-first DX.",url:"https://linear.app"},
+
+  // WEB3
+  {name:"Hardhat",price:"Free / OSS",type:"opensource",cat:"web3",desc:"Ethereum dev environment for compiling, testing, deploying contracts. JS-based.",url:"https://hardhat.org"},
+  {name:"Foundry",price:"Free / OSS",type:"opensource",cat:"web3",desc:"Rust-based smart contract framework. Fastest test runner. Now the industry standard.",url:"https://book.getfoundry.sh"},
+  {name:"Wagmi",price:"Free / OSS",type:"opensource",cat:"web3",desc:"React hooks for Ethereum. Wallet connections, contract reads/writes, type-safe.",url:"https://wagmi.sh"},
+  {name:"Viem",price:"Free / OSS",type:"opensource",cat:"web3",desc:"TypeScript interface for Ethereum. Replaces ethers.js. Used by Wagmi under the hood.",url:"https://viem.sh"},
+  {name:"OpenZeppelin",price:"Free / OSS",type:"opensource",cat:"web3",desc:"Audited Solidity contract library. Never write ERC20, ERC721, or access control from scratch.",url:"https://openzeppelin.com"},
+  {name:"Alchemy",price:"Free tier / usage-based",type:"freemium",cat:"web3",desc:"Best Ethereum RPC provider. Reliable endpoints, great dashboard, generous free tier.",url:"https://alchemy.com"},
+  {name:"The Graph",price:"Free / pay per query",type:"freemium",cat:"web3",desc:"Index and query on-chain events with GraphQL. Essential for any data-heavy dApp.",url:"https://thegraph.com"},
+  {name:"Scaffold-ETH 2",price:"Free / OSS",type:"opensource",cat:"web3",desc:"Next.js + Wagmi + Hardhat boilerplate. Best Web3 project kickstarter.",url:"https://scaffoldeth.io"},
+];
+
+let activeFilter = 'all';
+let searchVal = '';
+
+function filter() {
+  searchVal = document.getElementById('search').value.toLowerCase();
+  render();
+}
+
+function toggleCat(cat, btn) {
+  document.querySelectorAll('.filters button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  activeFilter = cat;
+  render();
+}
+
+function render() {
+  const priceTypes = ['free','freemium','paid','opensource'];
+  const catTypes = ['ai-coding','frontend','backend','devops','security','ai-ml','automation','monitoring','growth','web3'];
+
+  let filtered = tools.filter(t => {
+    const matchSearch = !searchVal || t.name.toLowerCase().includes(searchVal) || t.desc.toLowerCase().includes(searchVal) || t.cat.includes(searchVal);
+    const matchFilter = activeFilter === 'all' || t.type === activeFilter || t.cat === activeFilter;
+    return matchSearch && matchFilter;
+  });
+
+  const catLabels = {
+    'ai-coding':'AI Coding','frontend':'Frontend / UI / Design','backend':'Backend / Database',
+    'devops':'DevOps / Deployment','security':'Security / Auth','ai-ml':'AI / ML',
+    'automation':'Automation / Ops','monitoring':'Monitoring / Debugging','growth':'Growth / Sales','web3':'Blockchain / Web3'
+  };
+  const typeLabel = {'free':'Free','freemium':'Freemium','paid':'Paid','opensource':'Open Source'};
+  const typeClass = {'free':'free','freemium':'freemium','paid':'paid','opensource':'opensource'};
+
+  document.getElementById('count').textContent = filtered.length + ' tools shown';
+
+  let html = '';
+  let groupBy = priceTypes.includes(activeFilter) ? 'cat' : (catTypes.includes(activeFilter) ? 'type' : 'cat');
+
+  if(groupBy === 'cat') {
+    const cats = [...new Set(filtered.map(t => t.cat))];
+    cats.forEach(cat => {
+      const items = filtered.filter(t => t.cat === cat);
+      if(!items.length) return;
+      html += `<div class="section-label">${catLabels[cat]||cat} (${items.length})</div><div class="grid">`;
+      items.forEach(t => { html += cardHTML(t, typeLabel, typeClass); });
+      html += '</div>';
+    });
+  } else {
+    const types = [...new Set(filtered.map(t => t.type))];
+    types.forEach(type => {
+      const items = filtered.filter(t => t.type === type);
+      if(!items.length) return;
+      html += `<div class="section-label">${typeLabel[type]||type} (${items.length})</div><div class="grid">`;
+      items.forEach(t => { html += cardHTML(t, typeLabel, typeClass); });
+      html += '</div>';
+    });
+  }
+
+  if(!filtered.length) html = '<p style="color:var(--color-text-secondary);font-size:13px;padding:1rem 0">No tools found. Try a different search.</p>';
+  document.getElementById('grid').outerHTML = '<div id="grid">' + html.replace(/<div id="grid">/g,'') + '</div>';
+  document.getElementById('grid').innerHTML = html;
+}
+
+function cardHTML(t, typeLabel, typeClass) {
+  return `<div class="card">
+    <div class="card-top">
+      <span class="card-name">${t.name}</span>
+      <span class="badge ${typeClass[t.type]}">${typeLabel[t.type]}</span>
+    </div>
+    <div class="price">${t.price}</div>
+    <div class="desc">${t.desc}</div>
+    <a class="link" href="${t.url}" target="_blank">${t.url.replace('https://','')}</a>
+  </div>`;
+}
+
+render();
+</script>

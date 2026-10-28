@@ -1,0 +1,230 @@
+Convert this AI-generated influencer image into an indistinguishable real Instagram photograph.
+
+The final image must look naturally photographed by a real camera and uploaded by a real influencer, NOT digitally generated.
+
+PRIORITY:
+maximum realism,
+camera authenticity,
+human imperfection,
+social-media realism,
+optical realism,
+natural skin behavior,
+identity preservation.
+
+Preserve:
+- identity
+- face structure
+- body proportions
+- pose
+- outfit
+- composition
+- hairstyle
+- overall aesthetic
+
+Enhance realism by correcting all AI-generation artifacts and replacing them with believable photographic behavior.
+
+-----------------------------------
+FACE REALISM SYSTEM
+-----------------------------------
+
+Make the face feel naturally human:
+- subtle natural asymmetry
+- realistic eye spacing
+- believable facial tension
+- natural smile physics
+- soft skin transitions
+- realistic under-eye texture
+- natural lip texture
+- slight unevenness in expression
+
+Eyes must have:
+- matching realistic catchlights
+- physically consistent reflections
+- subtle tear-film highlights
+- natural sclera tone
+- realistic iris texture
+- soft eyelash variation
+
+Avoid:
+- dead eyes
+- hyper-perfect symmetry
+- wax lips
+- over-sharpened eyes
+- fake reflections
+- uncanny facial smoothness
+
+-----------------------------------
+SKIN REALISM SYSTEM
+-----------------------------------
+
+Transform skin into realistic camera-captured skin:
+- soft diffuse texture
+- visible but subtle pore variation
+- realistic tonal gradients
+- slight chromatic irregularities
+- natural redness variation
+- realistic cheek warmth
+- hydrated semi-matte finish
+- soft shadow transitions
+- subtle skin microtexture
+
+Skin should resemble:
+high-end DSLR photography,
+NOT beauty-filter AI rendering.
+
+Add:
+- realistic sensor noise
+- slight skin texture variation
+- natural T-zone reflectivity
+- mild compression softness
+
+Avoid:
+- plastic skin
+- airbrushed texture
+- CGI smoothness
+- HDR over-detail
+- fake glossy skin
+- uniform pore patterns
+
+-----------------------------------
+HAIR REALISM SYSTEM
+-----------------------------------
+
+Make hair physically believable:
+- realistic strand separation
+- natural flyaway hairs
+- layered texture depth
+- soft edge transitions
+- subtle highlight variation
+- believable hair shadows
+- natural volume randomness
+
+Avoid:
+- helmet hair
+- melted strands
+- overly perfect edges
+- fake volumetric hair
+- repeated strand patterns
+
+-----------------------------------
+BODY REALISM SYSTEM
+-----------------------------------
+
+Preserve realistic feminine anatomy:
+- soft natural body tension
+- believable posture
+- realistic skin compression
+- natural weight distribution
+- subtle asymmetry
+- realistic clothing interaction
+- natural body softness
+
+Avoid:
+- mannequin posture
+- unrealistic smoothness
+- hard AI anatomy edges
+- overdefined muscles
+- plastic body rendering
+
+-----------------------------------
+CAMERA REALISM SYSTEM
+-----------------------------------
+
+Make the image feel captured through a real camera sensor.
+
+Simulate:
+- iPhone / DSLR realism
+- natural lens softness
+- realistic depth-of-field
+- slight lens imperfections
+- subtle chromatic aberration
+- edge softness
+- realistic highlight rolloff
+- mild shadow noise
+- authentic dynamic range
+- natural exposure behavior
+
+Add:
+- realistic social-media compression
+- subtle JPEG softness
+- slight sensor grain
+- handheld realism
+
+Avoid:
+- ultra-clean CGI rendering
+- fake cinematic sharpness
+- overprocessed contrast
+- impossible optical perfection
+
+-----------------------------------
+SOCIAL-MEDIA REALISM SYSTEM
+-----------------------------------
+
+The image must feel:
+- casually photographed
+- naturally uploaded
+- socially authentic
+- emotionally human
+- platform-native
+
+Add:
+- slight framing imperfections
+- natural environmental randomness
+- believable clutter
+- realistic lighting inconsistency
+- candid realism
+- subtle motion softness if needed
+
+Avoid:
+- sterile studio perfection
+- robotic posing
+- overproduced beauty-campaign look
+- artificial symmetry
+- fake luxury CGI aesthetic
+
+-----------------------------------
+LIGHTING SYSTEM
+-----------------------------------
+
+Lighting must obey real-world physics:
+- believable light direction
+- natural bounce lighting
+- realistic shadow gradients
+- soft highlight transitions
+- authentic indoor/outdoor color temperature
+- physically coherent reflections
+
+Preferred lighting:
+- window light
+- warm ambient lighting
+- golden-hour realism
+- indoor practical lighting
+- natural daylight diffusion
+
+Avoid:
+- HDR glow
+- impossible reflections
+- overexposed skin shine
+- artificial beauty lighting
+
+-----------------------------------
+FINAL REALISM DIRECTIVE
+-----------------------------------
+
+The final result must look:
+- photographed
+- socially believable
+- naturally feminine
+- emotionally authentic
+- optically realistic
+- casually imperfect
+- compression-tested
+- Instagram-native
+
+The viewer should think:
+“this is a real influencer photo”
+
+NOT:
+“this is AI-generated”
+
+Add controlled imperfection everywhere realism normally exists in real photography.

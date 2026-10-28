@@ -1,0 +1,186 @@
+
+<h2 class="sr-only">Master prompt universe — existing and suggested prompts organized by domain</h2>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans);font-size:14px;color:var(--color-text-primary)}
+.top{display:flex;flex-wrap:wrap;gap:8px;margin:0 0 1.25rem;align-items:center}
+.top button{font-size:12px;padding:5px 12px;border-radius:100px;border:0.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);cursor:pointer}
+.top button.on{background:var(--color-text-primary);color:var(--color-background-primary);border-color:transparent}
+.legend{display:flex;gap:12px;flex-wrap:wrap;margin:0 0 1.25rem}
+.leg{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--color-text-secondary)}
+.leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0}
+.dot-have{background:#534AB7}.dot-need{background:#0F6E56}.dot-priority{background:#BA7517}.dot-optional{background:#888780}
+.domain-block{margin-bottom:1.5rem}
+.domain-label{font-size:11px;font-weight:500;letter-spacing:.05em;text-transform:uppercase;color:var(--color-text-secondary);margin-bottom:8px;padding-bottom:5px;border-bottom:0.5px solid var(--color-border-tertiary)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:8px}
+.card{border:0.5px solid var(--color-border-tertiary);border-radius:var(--border-radius-lg);padding:11px 13px;background:var(--color-background-primary);cursor:pointer;transition:border-color .15s}
+.card:hover{border-color:var(--color-border-primary)}
+.card.have{border-left:3px solid #534AB7}
+.card.need{border-left:3px solid #0F6E56}
+.card.priority{border-left:3px solid #BA7517}
+.card.optional{border-left:3px solid #888780}
+.card-num{font-size:10px;font-weight:500;color:var(--color-text-secondary);margin-bottom:4px}
+.card-name{font-size:12px;font-weight:500;line-height:1.4;margin-bottom:5px}
+.card-desc{font-size:11px;color:var(--color-text-secondary);line-height:1.5;margin-bottom:6px}
+.badges{display:flex;flex-wrap:wrap;gap:4px}
+.badge{font-size:10px;padding:2px 7px;border-radius:100px;font-weight:500}
+.b-have{background:#EEEDFE;color:#3C3489}
+.b-need{background:#E1F5EE;color:#085041}
+.b-priority{background:#FAEEDA;color:#633806}
+.b-optional{background:#F1EFE8;color:#444441}
+.b-tag{background:var(--color-background-secondary);color:var(--color-text-secondary)}
+.panel{background:var(--color-background-secondary);border-radius:var(--border-radius-lg);padding:14px 16px;margin-top:1.25rem;display:none}
+.panel.show{display:block}
+.panel h4{font-size:13px;font-weight:500;margin-bottom:6px}
+.panel p{font-size:12px;color:var(--color-text-secondary);line-height:1.6;margin-bottom:8px}
+.panel ul{padding-left:1rem;font-size:12px;color:var(--color-text-secondary);line-height:1.8}
+.panel .chip{display:inline-block;font-size:11px;padding:2px 8px;border-radius:100px;background:var(--color-background-primary);border:0.5px solid var(--color-border-secondary);margin:2px 2px 0}
+.panel-close{font-size:11px;color:var(--color-text-secondary);cursor:pointer;float:right;margin-top:-2px}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:1.25rem}
+.stat{background:var(--color-background-secondary);border-radius:var(--border-radius-md);padding:10px;text-align:center}
+.stat-n{font-size:20px;font-weight:500}
+.stat-l{font-size:10px;color:var(--color-text-secondary);margin-top:2px}
+</style>
+
+<div class="top">
+  <button class="on" onclick="filterCards('all',this)">All prompts</button>
+  <button onclick="filterCards('have',this)">You have (6)</button>
+  <button onclick="filterCards('need',this)">Add now (12)</button>
+  <button onclick="filterCards('priority',this)">High priority (8)</button>
+  <button onclick="filterCards('optional',this)">Optional (6)</button>
+</div>
+
+<div class="legend">
+  <div class="leg"><div class="leg-dot dot-have"></div> You already have</div>
+  <div class="leg"><div class="leg-dot dot-need"></div> Add now — critical gap</div>
+  <div class="leg"><div class="leg-dot dot-priority"></div> High priority</div>
+  <div class="leg"><div class="leg-dot dot-optional"></div> Optional / niche</div>
+</div>
+
+<div class="stats">
+  <div class="stat"><div class="stat-n" style="color:#534AB7">6</div><div class="stat-l">Already have</div></div>
+  <div class="stat"><div class="stat-n" style="color:#0F6E56">12</div><div class="stat-l">Critical gaps</div></div>
+  <div class="stat"><div class="stat-n" style="color:#BA7517">8</div><div class="stat-l">High priority</div></div>
+  <div class="stat"><div class="stat-n" style="color:#888780">6</div><div class="stat-l">Optional</div></div>
+</div>
+
+<div id="cards-container"></div>
+<div class="panel" id="detail-panel">
+  <span class="panel-close" onclick="closePanel()">close ×</span>
+  <h4 id="panel-title"></h4>
+  <p id="panel-desc"></p>
+  <div id="panel-covers"></div>
+  <div id="panel-tags" style="margin-top:8px"></div>
+</div>
+
+<script>
+const domains = [
+  {
+    label: 'Core development — you have these',
+    cards: [
+      { num:'#1', name:'Front-End Universal Master Upgrade Prompt', type:'have', desc:'Covers React, Next.js, Tailwind, shadcn, component architecture, performance, accessibility.', covers:['React/Next.js','Tailwind CSS','shadcn/ui','Component design','A11y','Performance','State management'], tags:['You have it'] },
+      { num:'#2', name:'Design & Architecture ML Pipeline Universal Master Prompt', type:'have', desc:'Covers machine learning pipelines, data preprocessing, model training, evaluation, deployment.', covers:['Data pipelines','Model training','Feature engineering','Evaluation metrics','MLflow','Deployment'], tags:['You have it'] },
+      { num:'#3', name:'System Design & Architecture Universal Master Prompt', type:'have', desc:'Covers distributed systems, scalability, CAP theorem, architecture decisions, trade-offs.', covers:['Distributed systems','Scalability','Architecture patterns','Load balancing','Caching strategies'], tags:['You have it'] },
+      { num:'#4', name:'Design & Architecture Back-End Universal Master Prompt', type:'have', desc:'Covers API design, server architecture, databases, performance, REST/GraphQL, microservices.', covers:['REST APIs','GraphQL','Microservices','Database design','Auth','Caching'], tags:['You have it'] },
+      { num:'#5', name:'Design & Architecture AI Workflow System Universal Master Prompt', type:'have', desc:'Covers AI-powered workflow automation, LLM orchestration, prompt chaining, human-in-the-loop.', covers:['LLM orchestration','Prompt chaining','Workflow design','n8n/Make','Human-in-loop'], tags:['You have it'] },
+      { num:'#6', name:'Design & Architecture Agentic AI System Universal Master Prompt', type:'have', desc:'Covers autonomous AI agents, tool use, memory systems, multi-agent coordination, ReAct loops.', covers:['Agent architecture','Tool use','Memory systems','Multi-agent','ReAct pattern','LangGraph'], tags:['You have it'] },
+    ]
+  },
+  {
+    label: 'Critical gaps — add these now',
+    cards: [
+      { num:'#7', name:'DevOps & Cloud Infrastructure Universal Master Prompt', type:'need', desc:'Covers CI/CD pipelines, Docker, Kubernetes, Terraform, cloud providers (AWS/GCP/Azure), monitoring, IaC. Without this you lack an ops brain for deployments.', covers:['CI/CD','Docker/K8s','Terraform','GitHub Actions','Vercel/Railway','Cloudflare','Monitoring','IaC'], tags:['Critical gap','Production ops'] },
+      { num:'#8', name:'Database Design & Optimization Universal Master Prompt', type:'need', desc:'Covers schema design, indexing strategies, query optimization, migrations, multi-tenancy (RLS), replication, and both SQL and NoSQL patterns.', covers:['Schema design','Indexing','Query optimization','Supabase RLS','Migrations','Replication','Redis caching'], tags:['Critical gap','Performance'] },
+      { num:'#9', name:'API Design & Integration Universal Master Prompt', type:'need', desc:'Covers REST, GraphQL, gRPC, WebSockets, rate limiting, versioning, documentation (OpenAPI), webhooks, and third-party API integration patterns.', covers:['REST/GraphQL','OpenAPI','Webhooks','Rate limiting','API versioning','SDK design','tRPC'], tags:['Critical gap','Integrations'] },
+      { num:'#10', name:'Security & Hardening Universal Master Prompt', type:'need', desc:'Covers OWASP Top 10, auth/authz patterns, secret management, dependency scanning, penetration testing mindset, compliance (SOC2/GDPR), and production hardening.', covers:['OWASP','Auth/Authz','Secrets (Infisical)','CVE scanning','GDPR/SOC2','Arcjet','Rate limiting'], tags:['Critical gap','Client-grade'] },
+      { num:'#11', name:'Testing & QA Universal Master Prompt', type:'need', desc:'Covers unit tests, integration tests, E2E (Playwright/Cypress), TDD, mocking, test coverage strategy, CI test automation, and synthetic monitoring.', covers:['Vitest/Jest','Playwright','Cypress','TDD','Mocking','CI integration','Checkly'], tags:['Critical gap','Quality'] },
+      { num:'#12', name:'Debugging & Performance Universal Master Prompt', type:'need', desc:'Covers systematic debugging workflows, profiling, memory leaks, Core Web Vitals, bundle analysis, database slow queries, and production incident response.', covers:['Sentry','LogRocket','Profiling','Bundle analysis','CWV','SQL EXPLAIN','Incident response'], tags:['Critical gap','Speed'] },
+      { num:'#13', name:'Mobile Development Universal Master Prompt', type:'need', desc:'Covers React Native, Expo, mobile UI patterns, app store submission, push notifications, offline sync, and native device APIs.', covers:['React Native','Expo','Mobile UI','Push notifications','Offline sync','App Store','Haptics'], tags:['Critical gap','Mobile market'] },
+      { num:'#14', name:'Automation & No-Code Integration Universal Master Prompt', type:'need', desc:'Covers n8n, Make, Zapier, webhook architecture, automation design patterns, CRM integrations, and building client-facing automation systems.', covers:['n8n','Make/Zapier','Webhooks','CRM integrations','Trigger.dev','Cal.com','Resend'], tags:['Critical gap','Leverage'] },
+      { num:'#15', name:'UI/UX Design System Universal Master Prompt', type:'need', desc:'Covers design tokens, component systems, typography, color theory, accessibility, Figma workflows, design-to-code pipelines, and client-presentable mockups.', covers:['Design tokens','Typography','Color systems','Figma','Accessibility','v0.dev','Spline 3D'], tags:['Critical gap','Client work'] },
+      { num:'#16', name:'Product Strategy & PRD Universal Master Prompt', type:'need', desc:'Covers writing product requirement docs, user stories, acceptance criteria, feature scoping, roadmap prioritization, and translating client briefs into technical specs.', covers:['PRDs','User stories','Feature scoping','Roadmaps','Client briefing','MoSCoW','Acceptance criteria'], tags:['Critical gap','Client work'] },
+      { num:'#17', name:'Freelance Business & Client Operations Universal Master Prompt', type:'need', desc:'Covers proposals, SOWs, project scoping, client communication, retainer structuring, invoicing, handling scope creep, and building productized services.', covers:['Proposals','SOW','Pricing strategy','Scope management','Retainers','Client comms','Loom updates'], tags:['Critical gap','Revenue'] },
+      { num:'#18', name:'Code Review & Refactoring Universal Master Prompt', type:'need', desc:'Covers structured code review, refactoring patterns, technical debt identification, clean code principles, naming conventions, and delivering feedback constructively.', covers:['Code review','Refactoring','Clean code','Tech debt','SOLID principles','Naming','Pattern detection'], tags:['Critical gap','Code quality'] },
+    ]
+  },
+  {
+    label: 'High priority — strong additions',
+    cards: [
+      { num:'#19', name:'Growth Engineering & SEO Universal Master Prompt', type:'priority', desc:'Covers technical SEO, Core Web Vitals, content strategy, analytics setup, A/B testing, conversion optimization, and growth loops for SaaS products.', covers:['Technical SEO','CWV','PostHog','Plausible','A/B testing','CRO','Schema markup'], tags:['High priority','Revenue growth'] },
+      { num:'#20', name:'Blockchain & Web3 Development Universal Master Prompt', type:'priority', desc:'Covers Solidity, Foundry, smart contract auditing, Wagmi/Viem, dApp architecture, DeFi patterns, NFT standards, and Web3 security pitfalls.', covers:['Solidity','Foundry','Wagmi/Viem','OpenZeppelin','Alchemy','The Graph','Smart contract security'], tags:['High priority','Web3 clients'] },
+      { num:'#21', name:'Data Engineering & Analytics Universal Master Prompt', type:'priority', desc:'Covers ETL pipelines, data warehousing, streaming data, BI dashboards, SQL analytics, dbt, and building data products for clients.', covers:['ETL pipelines','dbt','Warehousing','Streaming','BI dashboards','SQL analytics','Metabase'], tags:['High priority','Enterprise clients'] },
+      { num:'#22', name:'SaaS Architecture & Multi-Tenancy Universal Master Prompt', type:'priority', desc:'Covers SaaS-specific patterns: multi-tenancy, billing integration, usage metering, feature flags, onboarding flows, and tier-based access control.', covers:['Multi-tenancy','Stripe billing','Feature flags','Onboarding','Tier access','Usage metering','Churn prevention'], tags:['High priority','SaaS products'] },
+      { num:'#23', name:'Technical Documentation & Knowledge Base Universal Master Prompt', type:'priority', desc:'Covers writing technical docs, README files, API references, architecture decision records (ADRs), runbooks, and onboarding guides for client handoffs.', covers:['READMEs','API docs','ADRs','Runbooks','Client handoffs','OpenAPI spec','Diagrams-as-code'], tags:['High priority','Professionalism'] },
+      { num:'#24', name:'AI Prompt Engineering Universal Master Prompt', type:'priority', desc:'Covers advanced prompt design, chain-of-thought, few-shot examples, system prompt architecture, evaluation, and building reliable AI-powered product features.', covers:['Chain-of-thought','Few-shot','System prompts','Evaluation','Reliability','Structured output','Tool calling'], tags:['High priority','AI products'] },
+      { num:'#25', name:'Real-Time & Event-Driven Systems Universal Master Prompt', type:'priority', desc:'Covers WebSockets, Server-Sent Events, pub/sub patterns, message queues (Kafka/SQS), event sourcing, CQRS, and building live collaborative features.', covers:['WebSockets','SSE','Pub/Sub','Kafka/SQS','Event sourcing','CQRS','Supabase Realtime'], tags:['High priority','Advanced SaaS'] },
+      { num:'#26', name:'Monetization & Payments Integration Universal Master Prompt', type:'priority', desc:'Covers Stripe subscriptions, usage billing, metered APIs, invoicing, tax handling, payment flows, churn recovery, and pricing strategy for SaaS products.', covers:['Stripe','Subscriptions','Usage billing','Tax handling','Churn recovery','Pricing strategy','Free trials'], tags:['High priority','Revenue'] },
+    ]
+  },
+  {
+    label: 'Optional — niche or situational',
+    cards: [
+      { num:'#27', name:'Desktop App Development Universal Master Prompt', type:'optional', desc:'Covers Electron, Tauri, native OS integrations, auto-update systems, code signing, and cross-platform desktop app delivery.', covers:['Electron','Tauri','Native APIs','Auto-update','Code signing','Cross-platform'], tags:['Optional','Niche market'] },
+      { num:'#28', name:'Browser Extension Development Universal Master Prompt', type:'optional', desc:'Covers Chrome/Firefox extension APIs, content scripts, service workers, manifest v3, and building productivity tools as extensions.', covers:['Manifest V3','Content scripts','Service workers','Chrome APIs','Firefox compat'], tags:['Optional','Productized tools'] },
+      { num:'#29', name:'Game Development & Interactive Media Universal Master Prompt', type:'optional', desc:'Covers Three.js, Phaser, WebGL, interactive animations, physics engines, and building game-like interfaces for unique client projects.', covers:['Three.js','Phaser','WebGL','Canvas API','Physics','GSAP'], tags:['Optional','Creative projects'] },
+      { num:'#30', name:'Localization & Internationalization Universal Master Prompt', type:'optional', desc:'Covers i18n setup, locale management, RTL support, currency/date formatting, and building multi-language SaaS products for global clients.', covers:['next-intl','i18next','RTL layouts','Currency/date','Locale routing','Translation workflows'], tags:['Optional','Global clients'] },
+      { num:'#31', name:'Accessibility & Compliance Universal Master Prompt', type:'optional', desc:'Covers WCAG 2.2, ARIA patterns, keyboard navigation, screen reader support, and meeting ADA/Section 508 requirements for enterprise clients.', covers:['WCAG 2.2','ARIA','Keyboard nav','Screen readers','ADA compliance','Axe testing'], tags:['Optional','Enterprise clients'] },
+      { num:'#32', name:'Technical Sales & Proposal Engineering Universal Master Prompt', type:'optional', desc:'Covers writing winning technical proposals, estimating project costs, framing value for non-technical stakeholders, and closing enterprise deals.', covers:['Proposal writing','Cost estimation','Value framing','ROI modeling','Enterprise sales','Scope definition'], tags:['Optional','Agency scale'] },
+    ]
+  }
+];
+
+let activeFilter = 'all';
+let activeCard = null;
+
+const details = {};
+domains.forEach(d => d.cards.forEach(c => { details[c.num] = c; }));
+
+function filterCards(f, btn) {
+  activeFilter = f;
+  document.querySelectorAll('.top button').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  render();
+  closePanel();
+}
+
+function render() {
+  const container = document.getElementById('cards-container');
+  let html = '';
+  domains.forEach(domain => {
+    const visible = domain.cards.filter(c => activeFilter === 'all' || c.type === activeFilter);
+    if (!visible.length) return;
+    html += `<div class="domain-block"><div class="domain-label">${domain.label}</div><div class="grid">`;
+    visible.forEach(c => {
+      const badgeClass = { have:'b-have', need:'b-need', priority:'b-priority', optional:'b-optional' }[c.type];
+      const badgeLabel = { have:'You have it', need:'Add now', priority:'High priority', optional:'Optional' }[c.type];
+      html += `<div class="card ${c.type}" onclick="showDetail('${c.num}')">
+        <div class="card-num">${c.num}</div>
+        <div class="card-name">${c.name}</div>
+        <div class="card-desc">${c.desc.split('.')[0]}.</div>
+        <div class="badges">
+          <span class="badge ${badgeClass}">${badgeLabel}</span>
+          ${c.tags.filter(t=>t!=='You have it').slice(0,1).map(t=>`<span class="badge b-tag">${t}</span>`).join('')}
+        </div>
+      </div>`;
+    });
+    html += '</div></div>';
+  });
+  container.innerHTML = html;
+}
+
+function showDetail(num) {
+  const c = details[num];
+  if (!c) return;
+  document.getElementById('panel-title').textContent = c.num + ' — ' + c.name;
+  document.getElementById('panel-desc').textContent = c.desc;
+  document.getElementById('panel-covers').innerHTML = '<div style="font-size:11px;font-weight:500;color:var(--color-text-secondary);margin-bottom:5px">What this prompt covers:</div>' + c.covers.map(x=>`<span class="chip">${x}</span>`).join('');
+  document.getElementById('panel-tags').innerHTML = c.tags.map(t=>`<span class="chip">${t}</span>`).join('');
+  document.getElementById('detail-panel').classList.add('show');
+}
+
+function closePanel() {
+  document.getElementById('detail-panel').classList.remove('show');
+}
+
+render();
+</script>
